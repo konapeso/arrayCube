@@ -34,9 +34,12 @@ function init() {
    // マテリアルを作成
   // const material = new THREE.MeshBasicMaterial({color: 0x44aa88});
   // const material = new THREE.MeshPhongMaterial({color: 0x44aa88});
-  fetch('data.json')
-  .then(response => response.json())
-  .then(data => {
+  async function fetchData() {
+    const response = await fetch('data.json');
+    const data = await response.json();
+    return data;
+  }
+  function createMash(data){
     for (let i = 0; i < data.length; i++) {
         const material = new THREE.MeshStandardMaterial({ color: (data[i].color) });
     
@@ -53,8 +56,38 @@ function init() {
         meshList.push(mesh);
         // 配列に名前をつける
         mesh.name = "mesh-" + data[i].id;
+        console.log(mesh.name);
       }
-  },);
+    }
+    async function pushData() {
+        // json情報取得
+        const data = await fetchData();
+        // Mesh作成
+        createMash(data);
+      }
+    pushData();
+//   fetch('data.json')
+//   .then(response => response.json())
+//   .then(data => {
+//     for (let i = 0; i < data.length; i++) {
+//         const material = new THREE.MeshStandardMaterial({ color: (data[i].color) });
+    
+//         const mesh = new THREE.Mesh(geometry, material);
+//         mesh.position.x = data[i].x;
+//         mesh.position.y = data[i].y;
+//         mesh.position.z = data[i].z;
+//         // mesh.rotation.x = Math.random() * 2 * Math.PI;
+//         // mesh.rotation.y = Math.random() * 2 * Math.PI;
+//         // mesh.rotation.z = Math.random() * 2s* Math.PI;
+//         scene.add(mesh);
+
+//         // 配列に保存
+//         meshList.push(mesh);
+//         // 配列に名前をつける
+//         mesh.name = "mesh-" + data[i].id;
+//       }
+//       console.log(data);
+//   },);
 
 
   // 平行光源
@@ -95,10 +128,7 @@ function init() {
       // 交差しているオブジェクトが1つ以上存在し、
       // 交差しているオブジェクトの1番目(最前面)のものだったら
       if (intersects.length > 0 && mesh === intersects[0].object) {
-        // 色を赤くする
-        console.log(mesh.name);
-        
-        
+        console.log( mesh.name );
       } 
     });
 
